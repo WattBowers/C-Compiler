@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
+
 	input := `
 	int main() {
 	    int x = 10;

@@ -52,9 +52,6 @@ var keywords = map[string]TokenType{
 	"while":    KEYWORD,
 }
 
-var operators = "+-*/=><"
-var delimiters = "();{}"
-
 type Lexer struct {
 	input     string //whole string
 	index     int    // index of position in string
@@ -70,13 +67,13 @@ func New(input string) *Lexer {
 }
 
 func (lexer *Lexer) readChar() {
-	if len(lexer.input) <= lexer.index {
+	if len(lexer.input) <= lexer.nextIndex {
 		lexer.char = 0
 	} else {
-		lexer.char = lexer.input[lexer.index]
+		lexer.char = lexer.input[lexer.nextIndex]
 	}
-	lexer.index++
 	lexer.nextIndex++
+	lexer.index = lexer.nextIndex - 1
 }
 
 func (lexer *Lexer) NextToken() Token {
@@ -116,15 +113,14 @@ func (lexer *Lexer) NextToken() Token {
 		if isLetter(lexer.char) {
 			t.Literal = lexer.findKeyword()
 			t.Type = lexer.lookupIdentity(t.Literal)
-
 			return t
 		} else if isNumber(lexer.char) {
 			return Token{Type: NUMBER, Literal: lexer.findNumber()}
 		} else {
-			t = Token{Type: ILLEGAL, Literal: string(lexer.char)}
+			return Token{Type: ILLEGAL, Literal: string(lexer.char)}
 		}
 	}
-
+	lexer.readChar()
 	return t
 
 }
