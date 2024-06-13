@@ -1,0 +1,46 @@
+(* grammar.ebnf *)
+
+(* Program *)
+program = { function_definition };
+
+(* Function *)
+function_declaration = data_type, identifier, "(", parameter_list, ")", block;
+
+(* Paramaters *)
+parameter_list = [parameter, { ",", parameter }];
+paramater = "int", identifier;
+
+(* Block of Code *)
+block = "{", {statement}, "}";
+
+(* Statement *)
+statement = variable_declaration | assignment | return_statement | block;
+
+(* Variable Declaration *)
+variable_declaration = data_type, identifier, ["=", expression], ";"; 
+
+(* Data Types *)
+data_type = ["int" | "float" | "char"]
+
+(* Assignment *)
+assignment = identifier, "=", expression, ";";
+
+(* Return *)
+return_statement = "return", expression, ';';
+
+(* Addition and Subtraction *)
+expression = term, { ("+" | "-"), term };
+
+(* Multiply and Divide *)
+term = factor, { ("*" | "/"), factor };
+
+(* A number, identifier, or expression in brackets *)
+factor = identifier | number | "(", expression, ")";
+
+identifier = letter, {letter | digit};
+
+number = digit, {digit};
+
+letter = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z";
+
+digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
