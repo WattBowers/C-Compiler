@@ -3,26 +3,22 @@ package main
 import (
 	"compiler/pkg/lexer"
 	"fmt"
+	"os"
 )
 
 func main() {
 
-	input := `
-	int main() {
-	    int x = 10;
-	    int y = 20;
-	    int sum = x + y;
-	    if (sum > 20) {
-	        return 1;
-	    } else {
-	        return 0;
-	    }
+	bytes, _ := os.ReadFile("./examples/02.lang")
+
+	token := lexer.New(string(bytes))
+
+	var tokenList []lexer.Token
+
+	for t := token.NextToken(); t.Type != lexer.EOF; t = token.NextToken() {
+		tokenList = append(tokenList, t)
 	}
-	`
 
-	l := lexer.New(input)
-
-	for t := l.NextToken(); t.Type != lexer.EOF; t = l.NextToken() {
-		fmt.Printf("Token Type: %s, Literal: %s\n", t.Type, t.Literal)
+	for _, token := range tokenList {
+		fmt.Printf("Type: %-10s Literal: %-10s\n", token.Type, token.Literal)
 	}
 }

@@ -114,7 +114,7 @@ func (lexer *Lexer) NextToken() Token {
 			t.Literal = lexer.findKeyword()
 			t.Type = lexer.lookupIdentity(t.Literal)
 			return t
-		} else if isNumber(lexer.char) {
+		} else if lexer.isNumber(lexer.char) {
 			return Token{Type: NUMBER, Literal: lexer.findNumber()}
 		} else {
 			return Token{Type: ILLEGAL, Literal: string(lexer.char)}
@@ -133,12 +133,24 @@ func isLetter(char byte) bool {
 	}
 }
 
-func isNumber(char byte) bool {
+func (lexer *Lexer) isNumber(char byte) bool {
+
 	if char >= '0' && char <= '9' {
 		return true
+	} else if char == '.' && lexer.index > 0 && lexer.index < len(lexer.input)-1 {
+
+		prevChar := lexer.input[lexer.index-1]
+		nextChar := lexer.input[lexer.nextIndex]
+
+		if (prevChar >= '0' && prevChar <= '9') && (nextChar >= '0' && nextChar <= '9') {
+			return true
+		} else {
+			return false
+		}
 	} else {
 		return false
 	}
+
 }
 
 func (lexer *Lexer) skipWhiteSpace() {
@@ -165,7 +177,7 @@ func (lexer *Lexer) findKeyword() string {
 
 func (lexer *Lexer) findNumber() string {
 	index := lexer.index
-	for isNumber(lexer.char) {
+	for lexer.isNumber(lexer.char) {
 		lexer.readChar()
 	}
 	return lexer.input[index:lexer.index]
